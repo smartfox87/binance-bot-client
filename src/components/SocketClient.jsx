@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import useWebSocket, { ReadyState } from "react-use-websocket";
+import { Symbols } from "./Symbols.jsx";
 
 export const SocketClient = ({ url }) => {
   const [messageHistory, setMessageHistory] = useState([]);
@@ -7,9 +8,9 @@ export const SocketClient = ({ url }) => {
   const { sendMessage, lastMessage, readyState } = useWebSocket(url);
 
   useEffect(() => {
-    if (lastMessage !== null) {
-      setMessageHistory((prev) => prev.concat(lastMessage));
-    }
+    console.log(lastMessage);
+    if (lastMessage !== null)
+      setMessageHistory((prev) => prev.concat(JSON.parse(lastMessage.data)));
   }, [lastMessage]);
 
   const connectionStatus = {
@@ -21,20 +22,12 @@ export const SocketClient = ({ url }) => {
   }[readyState];
 
   return (
-    <section className="">
-      <header>
-        The WebSocket {url} is currently {connectionStatus}
+    <section className="container py-4">
+      <header className="flex items-center justify-between">
+        <h2 className="font-black">{url}</h2>
+        <span className="">{connectionStatus}</span>
       </header>
-      {lastMessage ? (
-        <span>
-          Last message: <pre>{lastMessage.data}</pre>
-        </span>
-      ) : null}
-      <ul>
-        {messageHistory.map((message, idx) => (
-          <span key={idx}>{message ? message.data : null}</span>
-        ))}
-      </ul>
+      {/*{<Symbols items={messageHistory} />}*/}
     </section>
   );
 };
