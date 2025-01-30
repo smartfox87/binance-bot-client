@@ -1,35 +1,20 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import {SocketClient} from "./components/SocketClient.jsx";
 
 function App() {
-  const [count, setCount] = useState(0)
+    const LOCAL_SOCKET_START_PORT = 5000
+    const LOCAL_SOCKET_HOST = 'localhost'
+    const urls = [
+     `ws://${LOCAL_SOCKET_HOST}:${LOCAL_SOCKET_START_PORT}/`
+    ]
 
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    return (
+        <section className="flex flex-col">
+            <header className="p-5">
+                <h1 className="text">Binance bot</h1>
+            </header>
+            <SocketClient url={urls[0]} />
+        </section>
+    );
 }
 
 export default App
