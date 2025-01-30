@@ -21,10 +21,10 @@ export const SocketClient = ({ url }) => {
   }[readyState];
 
   return (
-    <div>
-      <span>
+    <section className="">
+      <header>
         The WebSocket {url} is currently {connectionStatus}
-      </span>
+      </header>
       {lastMessage ? (
         <span>
           Last message: <pre>{lastMessage.data}</pre>
@@ -35,6 +35,6 @@ export const SocketClient = ({ url }) => {
           <span key={idx}>{message ? message.data : null}</span>
         ))}
       </ul>
-    </div>
+    </section>
   );
 };
