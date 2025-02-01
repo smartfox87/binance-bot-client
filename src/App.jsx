@@ -1,17 +1,21 @@
-import { SocketClient } from "./components/SocketClient.jsx";
+import { Navigation } from "./components/Navigation.jsx";
+import { Route, Routes } from "react-router";
+import { SymbolsPage } from "./pages/SymbolsPage.jsx";
+import { NAVIGATION_ROUTES } from "./constants/navigation.js";
+import { OrdersPage } from "./pages/OrdersPage.jsx";
 
 function App() {
-  const LOCAL_SOCKET_START_PORT = 5000;
-  const LOCAL_SOCKET_HOST = "localhost";
-  const urls = [`ws://${LOCAL_SOCKET_HOST}:${LOCAL_SOCKET_START_PORT}/`];
-
   return (
-    <section className="flex flex-col">
-      <header className="p-5">
-        <h1 className="text">Binance bot</h1>
+    <>
+      <header className="container flex items-center justify-between border-b border-gray-300 py-4">
+        <h1 className="text-2xl font-black">Binance bot</h1>
+        <Navigation />
       </header>
-      <SocketClient url={urls[0]} />
-    </section>
+      <Routes>
+        <Route path={NAVIGATION_ROUTES.SYMBOLS} element={<SymbolsPage />} />
+        <Route path={NAVIGATION_ROUTES.ORDERS} element={<OrdersPage />} />
+      </Routes>
+    </>
   );
 }
 
