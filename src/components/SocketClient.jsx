@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import useWebSocket, { ReadyState } from "react-use-websocket";
 import { Symbols } from "./Symbols.jsx";
+import { formatDate } from "../utils/format-date.js";
 
 export const SocketClient = ({ url }) => {
   const [messageHistory, setMessageHistory] = useState([]);
-  const [message, setMessage] = useState(null);
+  const [processingData, setProcessingData] = useState();
+  const [configData, setConfigData] = useState();
 
   const { sendMessage, lastMessage, readyState } = useWebSocket(url);
 
@@ -14,7 +16,11 @@ export const SocketClient = ({ url }) => {
       const data = JSON.parse(lastMessage.data);
       if (!data) return;
       setMessageHistory((prev) => prev.concat(data));
-      setMessage(data);
+      if (data.type === "process") {
+        return setProcessingData(data);
+      } else if (data.type === "config") {
+        return setConfigData(data);
+      }
     } catch (e) {
       console.error(`Process socket ${url} message error`, e);
     }
@@ -35,13 +41,23 @@ export const SocketClient = ({ url }) => {
       <header className="flex items-center justify-between">
         <h2 className="font-black">{url}</h2>
         <div className="flex gap-4">
-          {message && (
+          {processingData && (
             <>
               <div className="">
-                Iteration: <span className="">{message.iteration}</span>
+                Iteration: <span className="">{processingData.iteration}</span>
               </div>
               <div className="">
-                Duration: <span className="">{message.duration}</span>
+                Duration: <span className="">{processingData.duration}</span>
+              </div>
+            </>
+          )}
+          {configData && (
+            <>
+              <div className="">
+                Start time:{" "}
+                <span className="">
+                  {formatDate(configData.config.start_timestamp)}
+                </span>
               </div>
             </>
           )}
@@ -50,7 +66,7 @@ export const SocketClient = ({ url }) => {
           </div>
         </div>
       </header>
-      {message && <Symbols data={message} />}
+      {processingData && <Symbols data={processingData} />}
     </section>
   );
 };
