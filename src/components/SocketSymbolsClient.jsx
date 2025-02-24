@@ -1,30 +1,23 @@
 import { useEffect, useState } from "react";
 import useWebSocket, { ReadyState } from "react-use-websocket";
 import { Symbols } from "./Symbols.jsx";
-import { formatDate } from "../utils/format-date.js";
 
-export const SocketClient = ({ url }) => {
+export const SocketSymbolsClient = ({ url }) => {
   const [messageHistory, setMessageHistory] = useState([]);
   const [processingData, setProcessingData] = useState();
-  const [configData, setConfigData] = useState();
 
-  const { sendMessage, lastMessage, readyState } = useWebSocket(url);
+  const { sendMessage, lastJsonMessage, readyState } = useWebSocket(url);
 
   useEffect(() => {
     try {
-      if (!lastMessage?.data) return;
-      const data = JSON.parse(lastMessage.data);
-      if (!data) return;
-      setMessageHistory((prev) => prev.concat(data));
-      if (data.type === "process") {
-        return setProcessingData(data);
-      } else if (data.type === "config") {
-        return setConfigData(data);
-      }
+      if (!lastJsonMessage) return;
+      setMessageHistory((prev) => prev.concat(lastJsonMessage));
+      if (lastJsonMessage.type !== "symbols") return;
+      return setProcessingData(lastJsonMessage);
     } catch (e) {
       console.error(`Process socket ${url} message error`, e);
     }
-  }, [lastMessage]);
+  }, [lastJsonMessage]);
 
   const connectionStatus = {
     [ReadyState.CONNECTING]: "Connecting",
@@ -48,16 +41,6 @@ export const SocketClient = ({ url }) => {
               </div>
               <div className="">
                 Duration: <span className="">{processingData.duration}</span>
-              </div>
-            </>
-          )}
-          {configData && (
-            <>
-              <div className="">
-                Start time:{" "}
-                <span className="">
-                  {formatDate(configData.config.start_timestamp)}
-                </span>
               </div>
             </>
           )}

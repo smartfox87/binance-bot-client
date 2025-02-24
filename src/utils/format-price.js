@@ -1,8 +1,9 @@
 export const formatPrice = (price, decimals = 0) => {
-  let decimalsCount = price.toString().split(".")[1]?.length || 0;
+  const parsedPrice = parseFloat(price);
+  let decimalsCount = parsedPrice.toString().split(".")[1]?.length || 0;
   decimalsCount = decimals === "auto" ? decimalsCount : decimals;
 
-  return price.toLocaleString("en-US", {
+  return parseFloat(parsedPrice).toLocaleString("en-US", {
     minimumFractionDigits: decimalsCount,
     maximumFractionDigits: decimalsCount,
   });

@@ -3,7 +3,7 @@ import { NAVIGATION } from "../constants/navigation.js";
 
 export const Navigation = () => {
   return (
-    <nav>
+    <nav className="ml-auto">
       <ul className="flex gap-8">
         {NAVIGATION.map(({ path, name }) => (
           <li key={path}>
