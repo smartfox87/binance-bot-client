@@ -1,26 +1,16 @@
-import { SocketSymbolsClient } from "../components/SocketSymbolsClient.jsx";
-
-const urls = Array(10)
-  .fill(import.meta.env.VITE_LOCAL_SOCKET_HOST)
-  .map(
-    (host, index) =>
-      `ws://${host}:${parseInt(import.meta.env.VITE_LOCAL_SOCKET_START_PORT) + index + 1}`,
-  );
-// const urls2 = Array(2)
-//   .fill(LOCAL_SOCKET_HOST)
-//   .map(
-//     (host, index) => `ws://${host}:${LOCAL_SOCKET_START_PORT + index + 1000}`,
-//   );
+import { SymbolsGroup } from "../components/SymbolsGroup.jsx";
+import { useContext } from "react";
+import { DataContext } from "../contexts/main.js";
 
 export const SymbolsPage = () => {
+  const { symbolsData } = useContext(DataContext);
+  if (!symbolsData) return null;
+
   return (
     <>
-      {urls.map((url, index) => (
-        <SocketSymbolsClient key={index} url={url} />
+      {Object.values(symbolsData).map((group, index) => (
+        <SymbolsGroup key={index} index={index + 1} data={group} />
       ))}
-      {/*{urls2.map((url, index) => (*/}
-      {/*  <SocketClient key={index} url={url} />*/}
-      {/*))}*/}
     </>
   );
 };

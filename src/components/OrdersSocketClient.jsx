@@ -3,7 +3,7 @@ import useWebSocket, { ReadyState } from "react-use-websocket";
 import { formatDate } from "../utils/format-date.js";
 import { formatPrice } from "../utils/format-price.js";
 
-export const SocketUserClient = () => {
+export const OrdersSocketClient = () => {
   const url = `ws://${import.meta.env.VITE_LOCAL_SOCKET_HOST}:${import.meta.env.VITE_LOCAL_SOCKET_START_PORT}`;
   const [messageHistory, setMessageHistory] = useState([]);
   const [mainData, setConfigData] = useState();

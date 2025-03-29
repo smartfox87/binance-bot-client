@@ -1,7 +1,7 @@
 import { Orders } from "./Orders.jsx";
 import { formatPrice } from "../utils/format-price.js";
 
-export const Symbols = ({ data }) => {
+export const Symbols = ({ items }) => {
   return (
     <ul className="">
       <li className="flex items-center justify-between border-b border-gray-300 py-2">
@@ -13,7 +13,7 @@ export const Symbols = ({ data }) => {
         <div className="w-32 grow border-r border-gray-300 px-2">Bids</div>
         <div className="w-32 grow px-2">Asks</div>
       </li>
-      {data.items.map(
+      {items.map(
         (
           [name, price, amount_limit_usd, price_change, volume, bids, asks],
           index,
