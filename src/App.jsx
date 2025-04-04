@@ -6,28 +6,36 @@ import { Header } from "./components/Header.jsx";
 import { useEffect, useState } from "react";
 import useWebSocket from "react-use-websocket";
 import { DataContext } from "./contexts/main.js";
+import { Switch } from "./components/Switch.jsx";
 
 function App() {
   const url = `ws://${import.meta.env.VITE_LOCAL_SOCKET_HOST}:${import.meta.env.VITE_LOCAL_SOCKET_START_PORT}`;
   const [mainData, setMainData] = useState();
-  const [symbolsData, setSymbolsData] = useState();
+  const [symbolsData, setSymbolsData] = useState({});
   const [ordersData, setOrdersData] = useState();
   const [tradingStatus, setTradingStatus] = useState();
-
+  const [threadsData, setThreadsData] = useState();
   const { sendJsonMessage, lastJsonMessage, readyState } = useWebSocket(url);
+  const [isCanceled, setIsCanceled] = useState(true);
 
   useEffect(() => {
     try {
       if (!lastJsonMessage) return;
       if (lastJsonMessage.type === "main") {
         setMainData(lastJsonMessage.data);
-        console.log("main", lastJsonMessage.data);
-      } else if (lastJsonMessage.type === "symbols")
-        setSymbolsData(lastJsonMessage.data);
-      else if (lastJsonMessage.type === "orders")
-        setOrdersData(lastJsonMessage.data);
-      else if (lastJsonMessage.type === "trading")
-        setTradingStatus(lastJsonMessage.data);
+      } else if (lastJsonMessage.type === "symbols") {
+        const data = Object.entries(lastJsonMessage.data).map(([index, data]) => ({ index, data: JSON.parse(data) }));
+        const symbols = data.reduce((acc, { data: { items } }) => ({ ...acc, ...items.reduce((acc, item) => ({ ...acc, [item[0]]: item }), {}) }), {});
+        const threads = data.map(({ index, data: { iteration, duration, items } }) => ({ index, iteration, duration, items: items.length }), {});
+        setSymbolsData(symbols);
+        setThreadsData(threads);
+      } else if (lastJsonMessage.type === "orders") {
+        const orders = Object.values(lastJsonMessage.data).reduce(
+          (acc, orders) => acc.concat(Object.values(orders).filter(({ status }) => isCanceled || (status !== "CANCELED" && !isCanceled))),
+          [],
+        );
+        setOrdersData(orders);
+      } else if (lastJsonMessage.type === "trading") setTradingStatus(lastJsonMessage.data);
     } catch (e) {
       console.error(`Process socket ${url} message error`, e);
     }
@@ -37,6 +45,7 @@ function App() {
     <DataContext.Provider
       value={{
         mainData,
+        threadsData,
         symbolsData,
         ordersData,
         tradingStatus,
@@ -47,7 +56,10 @@ function App() {
       <Header data={mainData} status={readyState} />
       <Routes>
         <Route path={NAVIGATION_ROUTES.SYMBOLS} element={<SymbolsPage />} />
-        <Route path={NAVIGATION_ROUTES.ORDERS} element={<OrdersPage />} />
+        <Route
+          path={NAVIGATION_ROUTES.ORDERS}
+          element={<OrdersPage actions={<Switch name="Canceled Orders" value={isCanceled} onChange={() => setIsCanceled((prev) => !prev)} />} />}
+        />
       </Routes>
     </DataContext.Provider>
   );

@@ -1,5 +1,6 @@
 import { useContext } from "react";
 import { DataContext } from "../contexts/main.js";
+import { Switch } from "./Switch.jsx";
 
 export const ToggleTradingStatus = () => {
   const { mainData, status, send } = useContext(DataContext);
@@ -11,12 +12,10 @@ export const ToggleTradingStatus = () => {
   if (status === 3) return null;
 
   return (
-    <button
-      className={`cursor-pointer border px-3 py-2 font-black ${mainData?.is_running_trading ? "bg-black text-white" : ""}`}
-      type="button"
-      onClick={handleToggleStatus}
-    >
-      Trading {mainData?.is_running_trading ? "On" : "Off"}
-    </button>
+    <Switch
+      name="Trading"
+      value={mainData?.is_running_trading}
+      onChange={handleToggleStatus}
+    />
   );
 };
