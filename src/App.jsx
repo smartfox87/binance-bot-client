@@ -7,15 +7,17 @@ import { useEffect, useState } from "react";
 import useWebSocket from "react-use-websocket";
 import { DataContext } from "./contexts/main.js";
 import { Switch } from "./components/Switch.jsx";
+import { ThreadsPage } from "./pages/ThreadsPage.jsx";
 
 function App() {
   const url = `ws://${import.meta.env.VITE_LOCAL_SOCKET_HOST}:${import.meta.env.VITE_LOCAL_SOCKET_START_PORT}`;
+  const { sendJsonMessage, lastJsonMessage, readyState } = useWebSocket(url);
+
   const [mainData, setMainData] = useState();
   const [symbolsData, setSymbolsData] = useState({});
-  const [ordersData, setOrdersData] = useState();
+  const [ordersData, setOrdersData] = useState([]);
+  const [threadsData, setThreadsData] = useState([]);
   const [tradingStatus, setTradingStatus] = useState();
-  const [threadsData, setThreadsData] = useState();
-  const { sendJsonMessage, lastJsonMessage, readyState } = useWebSocket(url);
   const [isCanceled, setIsCanceled] = useState(true);
 
   useEffect(() => {
@@ -60,6 +62,7 @@ function App() {
           path={NAVIGATION_ROUTES.ORDERS}
           element={<OrdersPage actions={<Switch name="Canceled Orders" value={isCanceled} onChange={() => setIsCanceled((prev) => !prev)} />} />}
         />
+        <Route path={NAVIGATION_ROUTES.THREADS} element={<ThreadsPage />} />
       </Routes>
     </DataContext.Provider>
   );
