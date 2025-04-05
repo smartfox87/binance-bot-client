@@ -25,9 +25,10 @@ export const OrdersPage = ({ actions }) => {
           <div className="w-[5%] grow border-r border-gray-300 px-2">Stop price</div>
           <div className="w-[5%] grow border-r border-gray-300 px-2">Qty</div>
           <div className="w-[5%] grow border-r border-gray-300 px-2">Exec. qty</div>
+          <div className="w-[5%] grow border-r border-gray-300 px-2">Result</div>
           <div className="w-[7%] grow px-2">Time</div>
         </li>
-        {ordersData.map(({ symbol, id, status, type, side, price, avg_price, stop_price, orig_qty, executed_qty, update_time }) => (
+        {ordersData.map(({ symbol, id, status, type, side, price, avg_price, stop_price, orig_qty, executed_qty, result, update_time }) => (
           <li key={id} className="flex border-b border-gray-300 py-2">
             <div className="w-[5%] grow border-r border-gray-300 px-2 font-black">
               <Link to={`/?symbols_query=${symbol}`} className="hover:underline">
@@ -47,6 +48,7 @@ export const OrdersPage = ({ actions }) => {
             <div className="w-[5%] grow border-r border-gray-300 px-2">{formatPrice(stop_price, "auto")} $</div>
             <div className="w-[5%] grow border-r border-gray-300 px-2">{formatPrice(orig_qty, "auto")}</div>
             <div className="w-[5%] grow border-r border-gray-300 px-2">{formatPrice(executed_qty, "auto")}</div>
+            <div className="w-[5%] grow border-r border-gray-300 px-2">{result && formatPrice(result, "auto")} $</div>
             <div className="w-[7%] grow px-2">{formatDate(update_time)}</div>
           </li>
         ))}
