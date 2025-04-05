@@ -14,43 +14,21 @@ export const UserInfo = () => {
     [ReadyState.UNINSTANTIATED]: "Uninstantiated",
   }[status];
 
-  // {
-  //   "accountAlias": "fWAuuXTiFzTiTioC",
-  //     "asset": "USDT",
-  //     "balance": "100.00000000",
-  //     "crossWalletBalance": "100.00000000",
-  //     "crossUnPnl": "0.00000000",
-  //     "availableBalance": "100.00000000",
-  //     "maxWithdrawAmount": "100.00000000",
-  //     "marginAvailable": true,
-  //     "updateTime": 1738507786898
-  // }
-
   return (
     <section className="flex gap-4">
       {mainData && (
         <>
           <div className="">
-            Total balance:{" "}
-            <span className="">
-              {formatPrice(mainData.balance.balance, 2)} $
-            </span>
+            Total balance: <span className="">{formatPrice(mainData.balance.balance, 3)} $</span>
           </div>
           <div className="">
-            Available balance:{" "}
-            <span className="">
-              {formatPrice(mainData.balance.availableBalance, 2)} $
-            </span>
+            Available balance: <span className="">{formatPrice(mainData.balance.availableBalance, 3)} $</span>
           </div>
           <div className="">
-            PnL:{" "}
-            <span className="">
-              {formatPrice(mainData.balance.crossUnPnl, 2)} $
-            </span>
+            PnL: <span className="">{formatPrice(mainData.balance.crossUnPnl, 3)} $</span>
           </div>
           <div className="">
-            Start time:{" "}
-            <span className="">{formatDate(mainData.start_timestamp)}</span>
+            Start time: <span className="">{formatDate(mainData.start_timestamp)}</span>
           </div>
         </>
       )}

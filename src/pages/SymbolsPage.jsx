@@ -3,12 +3,13 @@ import { DataContext } from "../contexts/main.js";
 import { formatPrice } from "../utils/format-price.js";
 import { Orders } from "../components/Orders.jsx";
 
-export const SymbolsPage = () => {
+export const SymbolsPage = ({ search }) => {
   const { symbolsData } = useContext(DataContext);
   if (!symbolsData) return null;
 
   return (
-    <section className="container py-4">
+    <section className="container flex flex-col gap-4 py-4">
+      {search && <div className="">{search}</div>}
       <ul className="">
         <li className="flex items-center justify-between border-b border-gray-300 py-2">
           <div className="w-32 border-r border-gray-300 px-2">Name</div>
