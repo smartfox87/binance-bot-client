@@ -47,7 +47,9 @@ function App() {
           [],
         );
         setOrdersData(orders);
-      } else if (lastJsonMessage.type === "trading") setTradingStatus(lastJsonMessage.data);
+      } else if (lastJsonMessage.type === "trading") {
+        setTradingStatus(lastJsonMessage.data);
+      }
     } catch (e) {
       console.error(`Process socket ${url} message error`, e);
     }
