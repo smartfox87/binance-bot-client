@@ -34,7 +34,12 @@ function App() {
             ...acc,
             ...items
               .filter(([symbol]) => !searchParams.get("symbols_query") || symbol.includes(searchParams.get("symbols_query").toUpperCase()))
-              .reduce((acc, item) => ({ ...acc, [item[0]]: item }), {}),
+              .reduce((acc, item) => {
+                const bids = Object.keys(item[5]);
+                const asks = Object.keys(item[6]);
+                const order = bids.length ? Math.min(...bids.map(parseFloat)) : Math.max(...asks.map(parseFloat));
+                return { ...acc, [item[0]]: [...item, order] };
+              }, {}),
           }),
           {},
         );
@@ -46,7 +51,7 @@ function App() {
           (acc, orders) => acc.concat(Object.values(orders).filter(({ status }) => isCanceled || (status !== "CANCELED" && !isCanceled))),
           [],
         );
-        setOrdersData(orders);
+        if (orders?.length) setOrdersData(orders);
       } else if (lastJsonMessage.type === "trading") {
         setTradingStatus(lastJsonMessage.data);
       }

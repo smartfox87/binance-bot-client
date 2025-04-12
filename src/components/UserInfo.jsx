@@ -25,7 +25,7 @@ export const UserInfo = () => {
             Available balance: <span className="">{formatPrice(mainData.balance.availableBalance, 3)} $</span>
           </div>
           <div className="">
-            PnL: <span className="">{formatPrice(mainData.balance.crossUnPnl, 3)} $</span>
+            PnL: <span className="">{formatPrice(mainData.balance.crossUnPnl, 4)} $</span>
           </div>
           <div className="">
             Start time: <span className="">{formatDate(mainData.start_timestamp)}</span>
