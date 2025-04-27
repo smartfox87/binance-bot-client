@@ -14,7 +14,6 @@ export const OrdersPage = ({ actions }) => {
       <ul>
         <li className="flex border-y border-gray-300 py-2">
           <div className="w-[7%] grow border-r border-gray-300 px-2">Symbol</div>
-          {/*<div className="w-[4%] grow border-r border-gray-300 px-2">Id</div>*/}
           <div className="w-[4%] grow border-r border-gray-300 px-2">Status</div>
           <div className="w-[7.5%] grow border-r border-gray-300 px-2">Type</div>
           <div className="w-0 grow border-r border-gray-300 px-2">Side</div>
@@ -28,7 +27,6 @@ export const OrdersPage = ({ actions }) => {
           <div className="w-[1%] grow border-r border-gray-300 px-2">Result</div>
           <div className="w-[3%] grow border-r border-gray-300 px-2">Limit</div>
           <div className="w-[6%] grow px-2">Liquidity</div>
-          {/*<div className="w-[7%] grow px-2">Time</div>*/}
         </li>
         {ordersData.map(({ symbol, id, status, type, side, price, avg_price, stop_price, orig_qty, executed_qty, result, leverage, update_time }) => (
           <li key={id} className="flex border-b border-gray-300 py-2">
@@ -37,7 +35,6 @@ export const OrdersPage = ({ actions }) => {
                 {symbol}
               </Link>
             </div>
-            {/*<div className="w-[4%] grow border-r border-gray-300 px-2">{id}</div>*/}
             <div className="w-[4%] grow border-r border-gray-300 px-2">{status}</div>
             <div className="w-[7.5%] grow border-r border-gray-300 px-2">{type}</div>
             <div className="w-0 grow border-r border-gray-300 px-2">{side}</div>
@@ -57,7 +54,6 @@ export const OrdersPage = ({ actions }) => {
                 Object.keys(symbolsData[symbol]?.[side === "BUY" ? 5 : 6]).length > 0 &&
                 `${Object.keys(symbolsData[symbol][side === "BUY" ? 5 : 6])[0]} $ : ${formatPrice(Object.values(symbolsData[symbol][side === "BUY" ? 5 : 6])[0] * price, 0)} $`}
             </div>
-            {/*<div className="w-[7%] grow px-2">{formatDate(update_time)}</div>*/}
           </li>
         ))}
       </ul>
