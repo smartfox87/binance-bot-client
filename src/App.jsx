@@ -37,7 +37,7 @@ function App() {
               .reduce((acc, item) => {
                 const bids = Object.keys(item[5]);
                 const asks = Object.keys(item[6]);
-                const order = bids.length ? Math.min(...bids.map(parseFloat)) : Math.max(...asks.map(parseFloat));
+                const order = bids.length ? Math.max(...bids.map(parseFloat)) : Math.min(...asks.map(parseFloat));
                 return { ...acc, [item[0]]: [...item, order] };
               }, {}),
           }),

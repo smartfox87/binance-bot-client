@@ -21,11 +21,11 @@ export const SymbolsPage = ({ search }) => {
           <div className="w-32 grow border-r border-gray-300 px-2">Bids</div>
           <div className="w-32 grow px-2">Asks</div>
         </li>
-        {Object.values(symbolsData).map(([name, price, amount_limit_usd, price_change, volume, bids, asks, order], index) => (
+        {Object.values(symbolsData).map(([name, price, liquidity_amount_limit, price_change, volume, bids, asks, order], index) => (
           <li key={index} className="flex justify-between border-b border-gray-300 py-2">
             <div className="w-36 border-r border-gray-300 px-2">{name}</div>
             <div className="w-28 border-r border-gray-300 px-2">{formatPrice(price, "auto")} $</div>
-            <div className="w-28 border-r border-gray-300 px-2">{formatPrice(amount_limit_usd)} $</div>
+            <div className="w-28 border-r border-gray-300 px-2">{formatPrice(liquidity_amount_limit)} $</div>
             <div className="w-28 border-r border-gray-300 px-2">{price_change} %</div>
             <div className="w-32 border-r border-gray-300 px-2">{formatPrice(volume)} $</div>
             <div className="w-28 border-r border-gray-300 px-2"> {((Math.abs(price - order) / order) * 100).toFixed(5)} %</div>
