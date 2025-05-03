@@ -35,9 +35,15 @@ function App() {
             ...items
               .filter(([symbol]) => !searchParams.get("symbols_query") || symbol.includes(searchParams.get("symbols_query").toUpperCase()))
               .reduce((acc, item) => {
-                const bids = Object.keys(item[5]);
-                const asks = Object.keys(item[6]);
-                const order = bids.length ? Math.max(...bids.map(parseFloat)) : Math.min(...asks.map(parseFloat));
+                const bids = Object.keys(item[5])
+                  .map(parseFloat)
+                  .sort((a, b) => b - a);
+                const asks = Object.keys(item[6])
+                  .map(parseFloat)
+                  .sort((a, b) => a - b);
+                item[5] = bids.reduce((acc, key) => ({ ...acc, [key]: item[5][key] }), {});
+                item[6] = asks.reduce((acc, key) => ({ ...acc, [key]: item[6][key] }), {});
+                const order = bids.length ? bids[0] : asks[0];
                 return { ...acc, [item[0]]: [...item, order] };
               }, {}),
           }),
