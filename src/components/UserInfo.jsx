@@ -18,14 +18,21 @@ export const UserInfo = () => {
     <section className="flex gap-4">
       {mainData && (
         <>
-          <div className="">
-            Total balance: <span className="">{formatPrice(mainData.balance.balance, 3)} $</span>
-          </div>
-          <div className="">
-            Available balance: <span className="">{formatPrice(mainData.balance.availableBalance, 3)} $</span>
-          </div>
-          <div className="">
-            PnL: <span className="">{formatPrice(mainData.balance.crossUnPnl, 4)} $</span>
+          <div className="flex flex-col gap-1">
+            {Object.entries(mainData.balance).map(([symbol, { balance, availableBalance, crossUnPnl }]) => (
+              <div className="flex gap-4" key={symbol}>
+                <div className="font-black">{symbol}</div>
+                <div className="">
+                  Total balance: <span className="">{formatPrice(balance, 3)} $</span>
+                </div>
+                <div className="">
+                  Available balance: <span className="">{formatPrice(availableBalance, 3)} $</span>
+                </div>
+                <div className="">
+                  PnL: <span className="">{formatPrice(crossUnPnl, 4)} $</span>
+                </div>
+              </div>
+            ))}
           </div>
           <div className="">
             Start time: <span className="">{formatDate(mainData.start_timestamp)}</span>

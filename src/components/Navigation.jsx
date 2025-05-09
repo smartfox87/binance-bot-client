@@ -4,12 +4,14 @@ import { useContext } from "react";
 import { DataContext } from "../contexts/main.js";
 
 export const Navigation = () => {
-  const { symbolsData, threadsData, ordersData } = useContext(DataContext);
+  const { symbolsData, threadsData, ordersData, archiveData } = useContext(DataContext);
   const list = NAVIGATION.map(({ path, name }) => {
     if (path === NAVIGATION_ROUTES.SYMBOLS) {
       return { path, name, count: Object.keys(symbolsData).length };
     } else if (path === NAVIGATION_ROUTES.ORDERS) {
       return { path, name, count: ordersData.length };
+    } else if (path === NAVIGATION_ROUTES.ARCHIVE) {
+      return { path, name, count: archiveData.length };
     } else if (path === NAVIGATION_ROUTES.THREADS) {
       return { path, name, count: threadsData.length };
     }

@@ -3,12 +3,13 @@ import { DataContext } from "../contexts/main.js";
 import { formatPrice } from "../utils/format-price.js";
 import { Link } from "react-router";
 
-export const OrdersPage = () => {
-  const { symbolsData, ordersData } = useContext(DataContext);
-  if (!ordersData) return null;
+export const ArchivePage = ({ actions }) => {
+  const { symbolsData, archiveData } = useContext(DataContext);
+  if (!archiveData) return null;
 
   return (
     <section className="container flex flex-col gap-4 py-4">
+      {actions && <div className="flex">{actions}</div>}
       <ul>
         <li className="sticky top-[74px] z-20 flex border-y border-gray-300 bg-white py-2">
           <div className="w-[7%] grow border-r border-gray-300 px-2">Symbol</div>
@@ -26,7 +27,7 @@ export const OrdersPage = () => {
           <div className="w-[2.5%] grow border-r border-gray-300 px-2">Limit</div>
           <div className="w-[7%] grow px-2">Liquidity</div>
         </li>
-        {ordersData.map(({ symbol, id, status, type, side, price, avg_price, stop_price, orig_qty, executed_qty, result, leverage, update_time }) => (
+        {archiveData.map(({ symbol, id, status, type, side, price, avg_price, stop_price, orig_qty, executed_qty, result, leverage, update_time }) => (
           <li key={id} className="flex border-b border-gray-300 py-2">
             <div className="w-[7%] grow border-r border-gray-300 px-2 font-black">
               <Link to={`/?symbols_query=${symbol}`} className="hover:underline">
