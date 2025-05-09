@@ -6,5 +6,5 @@ export const Search = ({ param }) => {
     setSearchParams({ ...searchParams, [param]: target.value });
   };
 
-  return <input value={searchParams.get(param)} type="text" className="w-96 border border-l-gray-300 px-3 py-1.5" onInput={handleChange} placeholder="Search" />;
+  return <input value={searchParams.get(param) || ""} type="text" className="w-96 border border-l-gray-300 px-3 py-1.5" onInput={handleChange} placeholder="Search" />;
 };

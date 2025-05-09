@@ -9,6 +9,8 @@ import { DataContext } from "./contexts/main.js";
 import { Switch } from "./components/Switch.jsx";
 import { ThreadsPage } from "./pages/ThreadsPage.jsx";
 import { Search } from "./components/Search.jsx";
+import { ORDERS_AMOUNT_LIMIT_MULTIPLIER } from "./config.js";
+import { useLocalStorage } from "@uidotdev/usehooks";
 
 function App() {
   const url = `ws://${import.meta.env.VITE_LOCAL_SOCKET_HOST}:${import.meta.env.VITE_LOCAL_SOCKET_START_PORT}`;
@@ -19,8 +21,9 @@ function App() {
   const [ordersData, setOrdersData] = useState([]);
   const [threadsData, setThreadsData] = useState([]);
   const [tradingStatus, setTradingStatus] = useState();
-  const [isCanceled, setIsCanceled] = useState(true);
   const [searchParams] = useSearchParams();
+  const [isCanceled, setIsCanceled] = useLocalStorage("isCanceled", true);
+  const [isLimitedSymbols, setIsLimitedSymbols] = useLocalStorage("isLimitedSymbols", false);
 
   useEffect(() => {
     try {
@@ -35,21 +38,28 @@ function App() {
             ...items
               .filter(([symbol]) => !searchParams.get("symbols_query") || symbol.includes(searchParams.get("symbols_query").toUpperCase()))
               .reduce((acc, item) => {
-                const bids = Object.keys(item[5])
-                  .map(parseFloat)
-                  .sort((a, b) => b - a);
-                const asks = Object.keys(item[6])
-                  .map(parseFloat)
-                  .sort((a, b) => a - b);
+                const bids = Object.keys(item[5]).sort((a, b) => parseFloat(b) - parseFloat(a));
+                const asks = Object.keys(item[6]).sort((a, b) => parseFloat(a) - parseFloat(b));
                 item[5] = bids.reduce((acc, key) => ({ ...acc, [key]: item[5][key] }), {});
                 item[6] = asks.reduce((acc, key) => ({ ...acc, [key]: item[6][key] }), {});
                 const order = bids.length ? bids[0] : asks[0];
+                const orderAmount = bids.length ? item[5][order] : item[6][order];
+                console.log(`orderAmount`, orderAmount);
+                // if (isLimitedSymbols && orderAmount < item[4] * ORDERS_AMOUNT_LIMIT_MULTIPLIER) return acc;
                 return { ...acc, [item[0]]: [...item, order] };
               }, {}),
           }),
           {},
         );
-        const threads = data.map(({ index, data: { iteration, duration, items } }) => ({ index, iteration, duration, items: items.length }), {});
+        const threads = data.map(
+          ({ index, data: { iteration, duration, items } }) => ({
+            index,
+            iteration,
+            duration,
+            items: items.length,
+          }),
+          {},
+        );
         setSymbolsData(symbols);
         setThreadsData(threads);
       } else if (lastJsonMessage.type === "orders") {
@@ -66,6 +76,13 @@ function App() {
     }
   }, [lastJsonMessage]);
 
+  const ordersActions = (
+    <div className="flex gap-4">
+      <Search param="symbols_query" />
+      <Switch name="Limited Orders" value={isLimitedSymbols} onChange={() => setIsLimitedSymbols((prev) => !prev)} />
+    </div>
+  );
+
   return (
     <DataContext.Provider
       value={{
@@ -80,7 +97,7 @@ function App() {
     >
       <Header data={mainData} status={readyState} />
       <Routes>
-        <Route path={NAVIGATION_ROUTES.SYMBOLS} element={<SymbolsPage search={<Search param="symbols_query" />} />} />
+        <Route path={NAVIGATION_ROUTES.SYMBOLS} element={<SymbolsPage actions={ordersActions} />} />
         <Route
           path={NAVIGATION_ROUTES.ORDERS}
           element={<OrdersPage actions={<Switch name="Canceled Orders" value={isCanceled} onChange={() => setIsCanceled((prev) => !prev)} />} />}

@@ -1,7 +1,6 @@
 import { useContext } from "react";
 import { DataContext } from "../contexts/main.js";
 import { formatPrice } from "../utils/format-price.js";
-import { formatDate } from "../utils/format-date.js";
 import { Link } from "react-router";
 
 export const OrdersPage = ({ actions }) => {

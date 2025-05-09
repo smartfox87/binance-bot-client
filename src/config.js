@@ -1,0 +1,1 @@
+export const ORDERS_AMOUNT_LIMIT_MULTIPLIER = 2;
