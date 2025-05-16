@@ -5,11 +5,15 @@ import { Link } from "react-router";
 
 export const ArchivePage = ({ actions }) => {
   const { symbolsData, archiveData } = useContext(DataContext);
+  const result = archiveData.reduce((acc, { result }) => acc + parseFloat(result || 0), 0);
   if (!archiveData) return null;
 
   return (
     <section className="container flex flex-col gap-4 py-4">
-      {actions && <div className="flex">{actions}</div>}
+      <div className="flex justify-between gap-8">
+        {actions}
+        <div className="">Result: {formatPrice(result, 3)} $</div>
+      </div>
       <ul>
         <li className="sticky top-[74px] z-20 flex border-y border-gray-300 bg-white py-2">
           <div className="w-[7%] grow border-r border-gray-300 px-2">Symbol</div>
